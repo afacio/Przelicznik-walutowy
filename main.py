@@ -1,4 +1,5 @@
 import xml.etree.ElementTree  as  ET
+import requests
 
 class Waluta():
     def __init__(self, nazwa_waluty):
@@ -18,10 +19,16 @@ class ZbiorWalut():
     def __init__(self):
         self.zbior = list()
 
+    def download_file(self):
+        try:
+            url = 'https://www.nbp.pl/kursy/xml/lasta.xml'
+            r = requests.get(url, allow_redirects=True)
+            open('lasta.xml', 'wb').write(r.content)
+        except requests.ConnectionError:
+            print("brak polaczenia z internetem")
+            exit(1)
+
     def czytajPlik(self, zbior):
-        #TODO pobranie pliku z internetu
-        #TODO przy pobieraniu, kontrola braku połączenia internetowego
-        #sciezka do pliku xml ktory pobralem recznie
         file = r"lasta.xml"
 
         tree = ET.parse(file)
@@ -91,6 +98,7 @@ def zmiana_przecinka(str):
 
 def main():
     zbior = ZbiorWalut()
+    zbior.download_file()
     zbior.czytajPlik(zbior.zbior)
 
     program = True
@@ -103,7 +111,7 @@ def main():
             zbior.wyswietl_kod_waluty(zbior.zbior)
             waluta1 = zbior.wybor()
             waluta2 = zbior.wybor()
-            zbior.przelicznik(waluta1, waluta2)
+            przelicznik(waluta1, waluta2)
         elif wybor == '3':
             program = False
         else:
