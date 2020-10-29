@@ -17,16 +17,16 @@ class Waluta():
 
 class Plik():
     def __init__(self):
-        self.url = 'https://www.nbp.pl/kursy/xml/lasta.xml'
+        self.__url = 'https://www.nbp.pl/kursy/xml/lasta.xml'
     def download_file(self):
         try:
-            r = requests.get(self.url, allow_redirects=True)
+            r = requests.get(self.__url, allow_redirects=True)
             open('lasta.xml', 'wb').write(r.content)
         except requests.ConnectionError:
             print("brak polaczenia z internetem")
             exit(1)
 
-    def czytajPlik(self, zbior):
+    def load_file(self, zbior):
 
         file = r"lasta.xml"
         tree = ET.parse(file)
@@ -107,7 +107,7 @@ def main():
     plik.download_file()
 
     zbior_walut = ZbiorWalut()
-    plik.czytajPlik(zbior_walut.zbior)
+    plik.load_file(zbior_walut.zbior)
 
     MENU = "\nWybierz akcje:\n1: Podglad kursu walut\n2: Wymiana walutowa\n3: Koniec programu\n"
     while (program):
